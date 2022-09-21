@@ -1,0 +1,7 @@
+<component name="CopyrightManager">
+  <copyright>
+    <option name="allowReplaceRegexp" value="True" />
+    <option name="notice" value="__Author__= &quot;Manuel Pizano&quot;&#10;__Email__= &quot;doomclass@proton.me&quot;&#10;__Website__= &quot;https://github.com/maniakapps&quot;&#10;__Portfolio__= &quot;https://portafoliofullstack.vercel.app/&quot;&#10;&#10;Copyright (c) &amp;#36;originalComment.match(&quot;Copyright \(c\) (\d+)&quot;, 1, &quot;-&quot;, &quot;&amp;#36;today.year&quot;)&amp;#36;today.year. " />
+    <option name="myName" value="manuel" />
+  </copyright>
+</component>
