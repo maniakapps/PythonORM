@@ -18,16 +18,18 @@ class TestApp(unittest.TestCase):
         self.session = session
         self.engine = engine
         Base.metadata.create_all(self.engine)
-
-    def tearDown(self) -> None:
-        Base.metadata.drop_all(self.engine)
-
-    def test_create_airline_object_exists(self):
         self.airline = Airline(
             airline_code="IBM",
             airline_name="Inbursa MX",
             airline_country="Mexico",
             created_at=datetime.now()
         )
+        self.session.add(self.airline)
+        self.session.commit()
+
+    def tearDown(self) -> None:
+        Base.metadata.drop_all(self.engine)
+
+    def test_create_airline_object_exists(self):
         result = self.session.query(Airline).first()
-        assert self.airline.__eq__(result), True
+        self.assertEqual(self.airline, result)
