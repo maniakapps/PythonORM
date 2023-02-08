@@ -15,13 +15,13 @@ from system.relationships.models import Base
 
 
 def cleanup_data():
-    """ Removes all the tables  contents"""
+    """ Removes all the tables' contents """
     try:
         session.execute(text("SET FOREIGN_KEY_CHECKS=0;"))
         session.commit()
-        for table in Base.metadata.tables.keys():
+        for table in reversed(Base.metadata.sorted_tables):
             # truncate table airport restart identity cascade;
-            session.execute(text(f"TRUNCATE TABLE {table} restart identity cascade;"))
+            session.execute(text(f"TRUNCATE TABLE {table.name} restart identity cascade;"))
             session.commit()
         session.execute(text("SET FOREIGN_KEY_CHECKS=1;"))
         session.commit()
