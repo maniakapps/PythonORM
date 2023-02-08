@@ -34,9 +34,11 @@ def orm_create_passenger(session: Session, passenger: Passenger) -> Passenger:
         LOGGER.success(f"Created new passenger: {passenger}")
         return passenger
     except IntegrityError as e:
+        session.rollback()  # Rollback the change
         LOGGER.error(e.orig)
         raise e.orig
-    except SQLAlchemyError as e:
+    except Exception as e:  # Catch all other exceptions
+        session.rollback()  # Rollback the change
         LOGGER.error(f"Unexpected error when creating user: {e}")
         raise e
 
@@ -49,7 +51,6 @@ def orm_delete_passenger(session: Session, passenger: Passenger):
     :param session: SQLAlchemy database session.
     :type session: Session
 
-
     :return: None
     """
     try:
@@ -57,8 +58,10 @@ def orm_delete_passenger(session: Session, passenger: Passenger):
         session.commit()  # Commit the change
         LOGGER.success(f"Deleted passenger: {passenger}")
     except IntegrityError as e:
+        session.rollback()  # Rollback the change
         LOGGER.error(e.orig)
         raise e.orig
-    except SQLAlchemyError as e:
+    except Exception as e:  # Catch all other exceptions
+        session.rollback()  # Rollback the change
         LOGGER.error(f"Unexpected error when deleting user: {e}")
         raise e
