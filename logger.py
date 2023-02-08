@@ -6,51 +6,28 @@
 #
 #  Copyright (c) 2022.
 
-from sys import stdout
+import logging
+from rich.logging import RichHandler
 
-from loguru import logger as custom_logger
 
-
-def formatter(log: dict) -> str:
-    """
-    Format log colors based on level of importance.
-
-    :param log: Logged event stored as map containing  metadata.
-    :type log: a tuple
-    :returns: str formatted
-    """
-    if log["level"].name == "WARNING":
-        return (
-            "<white>{time:MM-DD-YYYY HH:mm:ss}</white> | "
-            "<light-yellow>{level}</light-yellow>: "
-            "<light-white>{message}</light-white> \n"
-        )
-    elif log["level"].name == "ERROR":
-        return (
-            "<white>{time:MM-DD-YYYY HH:mm:ss}</white> | "
-            "<light-red>{level}</light-red>: "
-            "<light-white>{message}</light-white> \n"
-        )
-    elif log["level"].name == "SUCCESS":
-        return (
-            "<white>{time:MM-DD-YYYY HH:mm:ss}</white> | "
-            "<light-green>{level}</light-green>: "
-            "<light-white>{message}</light-white> \n"
-        )
+def formatter(record):
+    if record.levelname == "WARNING":
+        return f"[light-yellow]{record.levelname}:[/light-yellow] [light-white]{record.msg}[/light-white]"
+    elif record.levelname == "ERROR":
+        return f"[light-red]{record.levelname}:[/light-red] [light-white]{record.msg}[/light-white]"
+    elif record.levelname == "SUCCESS":
+        return f"[light-green]{record.levelname}:[/light-green] [light-white]{record.msg}[/light-white]"
     else:
-        return (
-            "<white>{time:MM-DD-YYYY HH:mm:ss}</white> | "
-            "<fg #67c9c4>{level}</fg #67c9c4>: "
-            "<light-white>{message}</light-white> \n"
-        )
+        return f"[#67c9c4]{record.levelname}:[/#67c9c4] [light-white]{record.msg}[/light-white]"
 
 
-def create_logger() -> custom_logger:
-    """Create custom logger.
-    :return custom_logger """
-    custom_logger.remove()
-    custom_logger.add(stdout, colorize=True, format=formatter)
-    return custom_logger
+def create_logger(logger_name):
+    logger = logging.getLogger(logger_name)
+    logger.setLevel(logging.DEBUG)
+    handler = RichHandler()
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    return logger
 
 
-LOGGER = create_logger()
+LOGGER = create_logger(__name__)
